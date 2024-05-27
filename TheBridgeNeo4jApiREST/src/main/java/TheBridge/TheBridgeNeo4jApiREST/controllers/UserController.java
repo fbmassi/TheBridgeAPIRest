@@ -33,6 +33,15 @@ public class UserController {
         return principal.getName();
     }
 
+    @GetMapping("/user/{username}")
+    public ResponseEntity<UserDTO> getUser(@PathVariable String username) {
+        User user = userService.getUserByUsername(username);
+
+        UserDTO responseUser = new UserDTO(user.getName(),user.getUsername(),user.getRoles());
+
+        return new ResponseEntity<>(responseUser, HttpStatus.OK);
+    }
+
     @PostMapping("/register")
     public ResponseEntity<UserDTO> signUp(@RequestBody CreateUserRequest request) {
         User estudiante = userService.createUser(request);

@@ -27,4 +27,16 @@ public class TeamService {
     public List<Team> getTeamsByStudent(String username) {
         return equipoReposiory.findTeamsByStudent(username);
     }
+
+    public Team createTeam(String username, String nombre) {
+        return equipoReposiory.createTeam(username, nombre);
+    }
+
+    public void addStudentToTeam(String dueño, String username, String equipo) {
+        equipoReposiory.addStudentToTeam(dueño, username, equipo);
+    }
+
+    public void removeStudentFromTeam(String dueño, String username, String equipo) {
+        equipoReposiory.removeStudentFromTeam(dueño, username, equipo);
+    }
 }

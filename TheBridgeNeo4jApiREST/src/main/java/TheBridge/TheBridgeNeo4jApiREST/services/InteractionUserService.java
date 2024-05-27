@@ -6,6 +6,8 @@ import TheBridge.TheBridgeNeo4jApiREST.models.Valoracion;
 import TheBridge.TheBridgeNeo4jApiREST.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 public class InteractionUserService {
 
@@ -15,13 +17,22 @@ public class InteractionUserService {
         this.userRepository = userRepository;
     }
 
-    public void realizarComentario(User estudiante, Comentario comentario) {
-        estudiante.comentarPerfilCompañero(comentario);
-        userRepository.save(estudiante);
+    public void realizarComentario(User principal, Comentario comentario) {
+        userRepository.comentarPerfilCompañero(
+                principal.getUsername(),
+                comentario.getDestinatario().getUsername(),
+                comentario.getMensaje(),
+                LocalDateTime.now().toString());
     }
 
-    public void realizarValoracion(User estudiante, Valoracion valoracion) {
-        estudiante.valorarPerfilCompañero(valoracion);
-        userRepository.save(estudiante);
+    public void realizarValoracion(User principal, Valoracion valoracion) {
+        userRepository.valorarPerfilCompañero(
+                principal.getUsername(),
+                valoracion.getDestinatario().getUsername(),
+                valoracion.getAptitud1(),
+                valoracion.getAptitud2(),
+                valoracion.getAptitud3(),
+                valoracion.getMensaje(),
+                LocalDateTime.now().toString());
     }
 }

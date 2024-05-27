@@ -42,7 +42,7 @@ public class InteractionUserController {
         //TODO: Add validation to check if the comment is not toxic
         interactionUserService.realizarComentario(remitente, comentario);
 
-        ComentarioDTO responseComment = new ComentarioDTO(comentario.getMensaje(), comentario.getEstudiante().getUsername());
+        ComentarioDTO responseComment = new ComentarioDTO(comentario.getMensaje(), comentario.getDestinatario().getUsername());
 
         return new ResponseEntity<>(responseComment, HttpStatus.CREATED);
     }

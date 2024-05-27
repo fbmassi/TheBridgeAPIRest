@@ -23,7 +23,7 @@ public class Comentario {
         return mensaje;
     }
 
-    public User getEstudiante() {
+    public User getDestinatario() {
         return destinatario;
     }
 }

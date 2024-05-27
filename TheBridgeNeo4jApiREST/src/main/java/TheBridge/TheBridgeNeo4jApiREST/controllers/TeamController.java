@@ -5,11 +5,9 @@ import TheBridge.TheBridgeNeo4jApiREST.objects.TeamDTO;
 import TheBridge.TheBridgeNeo4jApiREST.services.TeamService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,17 +22,23 @@ public class TeamController {
         this.equipoService = equipoService;
     }
 
-    @GetMapping("/{indentifier}")
-    public ResponseEntity<TeamDTO> equipoDetails(@PathVariable String identifier) {
+    @GetMapping("/porID")
+    public ResponseEntity<TeamDTO> equipoDetails(@RequestParam String identifier) {
         Optional<Team> equipo = equipoService.getTeamByIdentifier(identifier);
+
+        if (equipo.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
         TeamDTO responseEquipo = new TeamDTO(equipo.get().getId(),
                 equipo.get().getEstudiantes().stream()
                         .map(estudiante -> estudiante.getUsername())
                         .collect(Collectors.toList()));
+
         return new ResponseEntity<>(responseEquipo, HttpStatus.OK);
     }
 
-    @GetMapping("/{username}")
+    @GetMapping("/deUsuario/{username}")
     public ResponseEntity<List<TeamDTO>> getEquiposByUser(@PathVariable String username) {
         List<Team> equipos = equipoService.getTeamsByStudent(username);
         List<TeamDTO> equiposResponse = equipos.stream().map(
@@ -46,5 +50,29 @@ public class TeamController {
                     return responseEquipo;}
         ).collect(Collectors.toList());
         return new ResponseEntity<>(equiposResponse, HttpStatus.OK);
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<TeamDTO> createEquipo(Principal principal, @RequestParam String nombre) {
+        Team nuevoEquipo = equipoService.createTeam(principal.getName(), nombre);
+
+        TeamDTO responseEquipo = new TeamDTO(nuevoEquipo.getId(),
+                nuevoEquipo.getEstudiantes().stream()
+                        .map(estudiante -> estudiante.getUsername())
+                        .collect(Collectors.toList()));
+
+        return new ResponseEntity<>(responseEquipo, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/addStudent")
+    public String addStudentToEquipo(Principal principal, @RequestParam String username, @RequestParam String equipo) {
+        equipoService.addStudentToTeam(principal.getName(), username, equipo);
+        return principal.getName()+" added " + username + " to team "+equipo;
+    }
+
+    @DeleteMapping("/removeStudent")
+    public String removeStudentFromEquipo(Principal principal, @RequestParam String username, @RequestParam String equipo) {
+        equipoService.removeStudentFromTeam(principal.getName(), username, equipo);
+        return principal.getName()+" removed from team "+ equipo;
     }
 }
