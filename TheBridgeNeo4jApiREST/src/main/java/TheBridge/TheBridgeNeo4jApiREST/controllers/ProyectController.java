@@ -17,9 +17,7 @@ public class ProyectController {
 
     private final ProyectService proyectoService;
 
-    public ProyectController(ProyectService proyectoService) {
-        this.proyectoService = proyectoService;
-    }
+    public ProyectController(ProyectService proyectoService) { this.proyectoService = proyectoService; }
 
     @GetMapping("/{indentifier}")
     public ResponseEntity<ProyectoDTO> proyectoDetails(@PathVariable String identifier) {

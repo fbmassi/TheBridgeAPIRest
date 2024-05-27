@@ -59,7 +59,7 @@ public class CourseService {
         curso.setIdentificador(request.getIdentificador());
         curso.setMateria(materia.get());
         curso.setEstudiantes(userRepository.findStudentsByEmails(request.getEmailsEstudiantes()));
-        curso.setProfesor(profesorRepository.findProfesorByEmail(request.getEmailProfesor())
+        curso.setProfesor(profesorRepository.findProfessorByEmail(request.getEmailProfesor())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404))));
 
         return courseRepository.save(curso);
