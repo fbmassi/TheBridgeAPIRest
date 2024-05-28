@@ -3,10 +3,12 @@ package TheBridge.TheBridgeNeo4jApiREST.services;
 import TheBridge.TheBridgeNeo4jApiREST.models.Comentario;
 import TheBridge.TheBridgeNeo4jApiREST.models.User;
 import TheBridge.TheBridgeNeo4jApiREST.models.Valoracion;
+import TheBridge.TheBridgeNeo4jApiREST.objects.ComentarioDTO;
 import TheBridge.TheBridgeNeo4jApiREST.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class InteractionUserService {
@@ -34,5 +36,9 @@ public class InteractionUserService {
                 valoracion.getAptitud3(),
                 valoracion.getMensaje(),
                 LocalDateTime.now().toString());
+    }
+
+    public List<ComentarioDTO> getComentariosByUser(String username) {
+        return userRepository.getComentariosByUser(username);
     }
 }

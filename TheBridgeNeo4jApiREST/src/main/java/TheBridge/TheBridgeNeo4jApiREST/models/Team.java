@@ -1,9 +1,6 @@
 package TheBridge.TheBridgeNeo4jApiREST.models;
 
-import org.springframework.data.neo4j.core.schema.GeneratedValue;
-import org.springframework.data.neo4j.core.schema.Id;
-import org.springframework.data.neo4j.core.schema.Node;
-import org.springframework.data.neo4j.core.schema.Relationship;
+import org.springframework.data.neo4j.core.schema.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,21 +11,36 @@ public class Team {
 
     @Id @GeneratedValue(GeneratedValue.UUIDGenerator.class)
     private UUID id;
+    @Property
+    private String nombre;
     @Relationship(type = "FORMA_PARTE_DE", direction = Relationship.Direction.INCOMING)
     private List<User> estudiantes = new ArrayList<User>();
     @Relationship(type = "REALIZADO_EN_EQUIPO_CON", direction = Relationship.Direction.INCOMING)
     private List<Proyect> proyectos;
 
 
-    public Team() {
+    public Team(String nombre) {
+        this.nombre = nombre;
     };
 
-    public Team(ArrayList<User> estudiantes) {
+    public Team(String nombre, ArrayList<User> estudiantes) {
         this.estudiantes = estudiantes;
     };
 
     public UUID getId() {
         return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
     public List<User> getEstudiantes() {

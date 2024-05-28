@@ -21,10 +21,6 @@ public class User implements UserDetails {
     private String password;
     private String roles;
     private boolean enabled;
-    @Relationship(type = "COMENTO_A", direction = Relationship.Direction.OUTGOING)
-    private List<Comentario> comentariosRealizados;
-    @Relationship(type = "VALORO_A", direction = Relationship.Direction.OUTGOING)
-    private List<Valoracion> valoracionesRealizados;
 
     public User() {
     }
@@ -64,28 +60,6 @@ public class User implements UserDetails {
     }
     public void setRoles(String roles) {
         this.roles = roles;
-    }
-
-    public List<Comentario> getComentarios() {
-        return comentariosRealizados;
-    }
-
-    public void comentarPerfilCompañero(Comentario comentario) {
-        if (comentariosRealizados == null) {
-            comentariosRealizados = new ArrayList<>();
-        }
-        comentariosRealizados.add(comentario);
-    }
-
-    public List<Valoracion> getValoraciones() {
-        return valoracionesRealizados;
-    }
-
-    public void valorarPerfilCompañero(Valoracion valoracion) {
-        if (valoracionesRealizados == null) {
-            valoracionesRealizados = new ArrayList<>();
-        }
-        valoracionesRealizados.add(valoracion);
     }
 
     @Override

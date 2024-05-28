@@ -11,12 +11,10 @@ import TheBridge.TheBridgeNeo4jApiREST.services.InteractionUserService;
 import TheBridge.TheBridgeNeo4jApiREST.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/interaccion")
@@ -42,7 +40,7 @@ public class InteractionUserController {
         //TODO: Add validation to check if the comment is not toxic
         interactionUserService.realizarComentario(remitente, comentario);
 
-        ComentarioDTO responseComment = new ComentarioDTO(comentario.getMensaje(), comentario.getDestinatario().getUsername());
+        ComentarioDTO responseComment = new ComentarioDTO(comentario.getMensaje(), principal.getName(), comentario.getDestinatario().getUsername());
 
         return new ResponseEntity<>(responseComment, HttpStatus.CREATED);
     }
@@ -69,5 +67,12 @@ public class InteractionUserController {
         ValoracionDTO responseValoracion = new ValoracionDTO(valoracion);
 
         return new ResponseEntity<>(responseValoracion, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/misComentarios")
+    public ResponseEntity<List<ComentarioDTO>> getComentariosByUser(Principal principal) {
+        List<ComentarioDTO> comentarios = interactionUserService.getComentariosByUser(principal.getName());
+
+        return new ResponseEntity<>(comentarios, HttpStatus.OK);
     }
 }

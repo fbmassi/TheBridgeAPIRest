@@ -30,7 +30,8 @@ public class TeamController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        TeamDTO responseEquipo = new TeamDTO(equipo.get().getId(),
+        TeamDTO responseEquipo = new TeamDTO(
+                equipo.get().getNombre(),
                 equipo.get().getEstudiantes().stream()
                         .map(estudiante -> estudiante.getUsername())
                         .collect(Collectors.toList()));
@@ -43,7 +44,7 @@ public class TeamController {
         List<Team> equipos = equipoService.getTeamsByStudent(username);
         List<TeamDTO> equiposResponse = equipos.stream().map(
                 (equipo) -> {TeamDTO responseEquipo = new TeamDTO(
-                        equipo.getId(),
+                        equipo.getNombre(),
                         equipo.getEstudiantes().stream()
                                 .map(estudiante -> estudiante.getUsername())
                                 .collect(Collectors.toList()));
@@ -54,14 +55,9 @@ public class TeamController {
 
     @PostMapping("/create")
     public ResponseEntity<TeamDTO> createEquipo(Principal principal, @RequestParam String nombre) {
-        Team nuevoEquipo = equipoService.createTeam(principal.getName(), nombre);
+        TeamDTO nuevoEquipo = equipoService.createTeam(principal.getName(), nombre);
 
-        TeamDTO responseEquipo = new TeamDTO(nuevoEquipo.getId(),
-                nuevoEquipo.getEstudiantes().stream()
-                        .map(estudiante -> estudiante.getUsername())
-                        .collect(Collectors.toList()));
-
-        return new ResponseEntity<>(responseEquipo, HttpStatus.CREATED);
+        return new ResponseEntity<>(nuevoEquipo, HttpStatus.CREATED);
     }
 
     @PostMapping("/addStudent")

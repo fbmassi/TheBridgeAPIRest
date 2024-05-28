@@ -1,21 +1,25 @@
 package TheBridge.TheBridgeNeo4jApiREST.objects;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-
 
 public class TeamDTO {
+    private String nombre;
+    private List<String> estudiantes;
 
-    private UUID id;
-    private List<String> estudiantes = new ArrayList<String>();
-
-    public TeamDTO () {
+    public TeamDTO() {
     }
 
-    public TeamDTO(UUID id, List<String> estudiantes) {
-        this.id = id;
+    public TeamDTO(String nombre, List<String> estudiantes) {
+        this.nombre = nombre;
         this.estudiantes = estudiantes;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
     public List<String> getEstudiantes() {
@@ -24,13 +28,5 @@ public class TeamDTO {
 
     public void setEstudiantes(List<String> estudiantes) {
         this.estudiantes = estudiantes;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
     }
 }

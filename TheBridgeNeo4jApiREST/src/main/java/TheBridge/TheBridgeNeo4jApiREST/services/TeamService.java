@@ -1,6 +1,7 @@
 package TheBridge.TheBridgeNeo4jApiREST.services;
 
 import TheBridge.TheBridgeNeo4jApiREST.models.Team;
+import TheBridge.TheBridgeNeo4jApiREST.objects.TeamDTO;
 import TheBridge.TheBridgeNeo4jApiREST.repositories.TeamRepository;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +29,7 @@ public class TeamService {
         return equipoReposiory.findTeamsByStudent(username);
     }
 
-    public Team createTeam(String username, String nombre) {
+    public TeamDTO createTeam(String username, String nombre) {
         return equipoReposiory.createTeam(username, nombre);
     }
 
