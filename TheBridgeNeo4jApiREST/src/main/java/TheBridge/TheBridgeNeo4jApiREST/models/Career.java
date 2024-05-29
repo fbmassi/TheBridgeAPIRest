@@ -12,29 +12,41 @@ import java.util.UUID;
 public class Career {
 
     @Id @GeneratedValue(GeneratedValue.UUIDGenerator.class)
-    private UUID id;
-    private String nombre;
-    private String codigo;
+    private UUID identifier;
+    private String name;
+    private String code;
     private String facultad;
 
     public Career() {
     }
 
-    public Career(String nombre, String codigo, String facultad) {
-        this.nombre = nombre;
-        this.codigo = codigo;
+    public Career(String name, String code, String facultad) {
+        this.name = name;
+        this.code = code;
         this.facultad = facultad;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getName() {
+        return name;
     }
 
-    public String getCodigo() {
-        return codigo;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getFacultad() {
         return facultad;
+    }
+
+    public void setFacultad(String facultad) {
+        this.facultad = facultad;
     }
 }

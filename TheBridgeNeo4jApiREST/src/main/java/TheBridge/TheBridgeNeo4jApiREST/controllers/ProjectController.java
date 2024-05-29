@@ -27,13 +27,6 @@ public class ProjectController {
         ProjectDTO projectDTO = new ProjectDTO(
         );
 
-        projectDTO.setCurso(result.getCourse().getNombre());
-        projectDTO.setEquipo(result.getTeam());
-        projectDTO.setDescripcion(result.getProject().getDescripcion());
-        projectDTO.setTitulo(result.getProject().getTitulo());
-        projectDTO.setIdentifier(result.getProject().getIdentifier());
-        projectDTO.setFotos(result.getProject().getFotos());
-        projectDTO.setLinks(result.getProject().getLinks());
 
         return new ResponseEntity<>(projectDTO, HttpStatus.OK);
     }

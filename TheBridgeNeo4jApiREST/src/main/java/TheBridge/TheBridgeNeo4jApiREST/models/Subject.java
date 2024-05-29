@@ -12,29 +12,29 @@ public class Subject {
     @Id @GeneratedValue(GeneratedValue.UUIDGenerator.class)
     private UUID id;
     private String name;
-    private String codigo;
+    private String code;
 
     public Subject() {
     }
 
-    public Subject(String nombre, String codigo) {
-        this.name = nombre;
-        this.codigo = codigo;
+    public Subject(String name, String code) {
+        this.name = name;
+        this.code = code;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getCodigo() {
-        return codigo;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setName(String nombre) {
-        this.name = nombre;
+    public String getCode() {
+        return code;
     }
 
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
+    public void setCode(String code) {
+        this.code = code;
     }
 }

@@ -1,61 +1,64 @@
 package TheBridge.TheBridgeNeo4jApiREST.services;
 
-import TheBridge.TheBridgeNeo4jApiREST.models.Course;
-import TheBridge.TheBridgeNeo4jApiREST.models.Subject;
-import TheBridge.TheBridgeNeo4jApiREST.repositories.CourseRepository;
-import TheBridge.TheBridgeNeo4jApiREST.repositories.ProfessorRepository;
-import TheBridge.TheBridgeNeo4jApiREST.repositories.SubjectRepository;
-import TheBridge.TheBridgeNeo4jApiREST.repositories.UserRepository;
-import TheBridge.TheBridgeNeo4jApiREST.requests.CreateCourseRequest;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
-import java.util.Optional;
+import TheBridge.TheBridgeNeo4jApiREST.models.Course;
+import TheBridge.TheBridgeNeo4jApiREST.objects.CourseDTO;
+import TheBridge.TheBridgeNeo4jApiREST.queryresults.CoursesOfSubjectQueryResult;
+import TheBridge.TheBridgeNeo4jApiREST.repositories.CourseRepository;
+import TheBridge.TheBridgeNeo4jApiREST.repositories.SubjectRepository;
+import org.springframework.stereotype.Service;
 
 @Service
 public class CourseService {
     private final CourseRepository courseRepository;
-    private final SubjectRepository materiaRepository;
-    private final UserRepository userRepository;
-    private final ProfessorRepository profesorRepository;
 
     public CourseService(
-            CourseRepository courseRepository,
-            SubjectRepository materiaRepository,
-            UserRepository userRepository,
-            ProfessorRepository profesorRepository
+            CourseRepository courseRepository
     ) {
         this.courseRepository = courseRepository;
-        this.materiaRepository = materiaRepository;
-        this.userRepository = userRepository;
-        this.profesorRepository = profesorRepository;
     }
 
-    public List<Course> getAllCourses() {
-        return courseRepository.findAll();
+    public CoursesOfSubjectQueryResult createCourse(String code, String name, String subjectCode) {
+        Course course = courseRepository.findCourseByCode(code);
+
+        if (course == null) {
+            course = new Course(code, name);
+            courseRepository.save(course);
+            courseRepository.addCourseToSubject(code, subjectCode);
+        }
+
+        return courseRepository.findCoursesOfSubject(subjectCode);
     }
 
     public Course getCourseByIdentifier(String identifier) {
-
-        return courseRepository.findCourseById(identifier)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404)));
+        return courseRepository.findCourseByIdentifier(identifier);
     }
 
-    public Course createCourse(CreateCourseRequest request) {
-        //TODO corregir
-        if (courseRepository.findCourseById(request.getIdentificador()).isPresent()) {
-            throw new ResponseStatusException(HttpStatusCode.valueOf(400));
-        }
+    public Course getCourseByCode(String code) {
+        return courseRepository.findCourseByCode(code);
+    }
 
-        Optional<Subject> materia = materiaRepository.findSubjectByName(request.getMateria());
+    public CoursesOfSubjectQueryResult getCoursesOfSubject(String subjectCode) {
+        return courseRepository.findCoursesOfSubject(subjectCode);
+    }
 
-        if (materia.isEmpty()) {
-            throw new ResponseStatusException(HttpStatusCode.valueOf(400));
-        }
+    public void addCourseToSubject(String courseCode, String subjectCode) {
+        courseRepository.addCourseToSubject(courseCode, subjectCode);
+    }
 
+    public void removeCourseFromSubject(String courseCode, String subjectCode) {
+        courseRepository.removeCourseFromSubject(courseCode, subjectCode);
+    }
 
-        return null;
+    public CourseDTO getUsersOfCourse(String courseCode) {
+        return courseRepository.findUsersOfCourse(courseCode).toCourseDTO();
+    }
+
+    public void addUserToCourse(String username, String courseCode) {
+        courseRepository.addUserToCourse(username, courseCode);
+    }
+
+    public void removeUserFromCourse(String username, String courseCode) {
+        courseRepository.removeUserFromCourse(username, courseCode);
     }
 }

@@ -12,27 +12,31 @@ import java.util.UUID;
 public class Course {
 
     @Id @GeneratedValue(GeneratedValue.UUIDGenerator.class)
-    private UUID id;
-    private String identificador;
-    private String nombre;
+    private UUID identifier;
+    private String code;
+    private String name;
 
     public Course() {
     }
 
-    public String getIdentificador() {
-        return identificador;
+    public Course(String code, String name) {
+        this.code = code;
+        this.name = name;
     }
 
-    public void setIdentificador(String identificador) {
-        this.identificador = identificador;
+    public String getCode() {
+        return code;
     }
 
-    public String getNombre() {
-        return nombre;
+    public void setCode(String code) {
+        this.code = code;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public String getName() {
+        return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
 }
