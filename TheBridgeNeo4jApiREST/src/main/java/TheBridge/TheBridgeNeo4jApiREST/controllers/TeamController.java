@@ -1,17 +1,17 @@
 package TheBridge.TheBridgeNeo4jApiREST.controllers;
 
-import TheBridge.TheBridgeNeo4jApiREST.models.Team;
-import TheBridge.TheBridgeNeo4jApiREST.objects.TeamDTO;
-import TheBridge.TheBridgeNeo4jApiREST.objects.UserDTO;
+import TheBridge.TheBridgeNeo4jApiREST.models.*;
+import TheBridge.TheBridgeNeo4jApiREST.objects.*;
 import TheBridge.TheBridgeNeo4jApiREST.queryresults.TeamUsersQueryResult;
 import TheBridge.TheBridgeNeo4jApiREST.services.TeamService;
+import TheBridge.TheBridgeNeo4jApiREST.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 @RestController
@@ -19,9 +19,11 @@ import java.util.stream.Collectors;
 public class TeamController {
 
     private final TeamService equipoService;
+    private final UserService userService;
 
-    public TeamController(TeamService equipoService) {
+    public TeamController(TeamService equipoService, UserService userService) {
         this.equipoService = equipoService;
+        this.userService = userService;
     }
 
     @GetMapping("/porIdentifier")
@@ -64,5 +66,115 @@ public class TeamController {
     public ResponseEntity<TeamDTO> removeStudentFromEquipo(Principal principal, @RequestParam String username, @RequestParam String identifier) {
         TeamDTO nuevoEquipo = equipoService.removeStudentFromTeam(principal.getName(), username, identifier);
         return new ResponseEntity<>(nuevoEquipo, HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<User>> getEstudiantesRecomendaciones(@RequestParam String identifier) {
+        String habilidadNecesaria = this.getHabilidadNecesaria(identifier);
+        List<User> totalEstudiantes = userService.getAllUsers();
+        List<User> estudiantesOrdenados = totalEstudiantes.stream()
+                .sorted(Comparator.comparingDouble(user -> -calcularHabilidadEstudiante(user, habilidadNecesaria)))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(estudiantesOrdenados, HttpStatus.OK);
+    }
+
+    private String getHabilidadNecesaria(String identifier) {
+        List<User> integrantes = equipoService.getTeamWithUsersByIdentifier(identifier).getUsers();
+        HashMap<String, Integer> sumaHabilidades = getSumaHabilidades(integrantes);
+        int cantIntegrantes = integrantes.size();
+        HashMap<String, Double> mediaHabilidades = getMediaHabilidades(sumaHabilidades, cantIntegrantes);
+        HashMap<String, Double> desviacionEstandarHabilidades = getDesviacionEstandarHabilidades(integrantes, mediaHabilidades);
+        List<Entry<String, Double>> desviacionesOrdenadas = ordenarDesviaciones(desviacionEstandarHabilidades);
+        return desviacionesOrdenadas.get(0).getKey();
+    }
+
+    private HashMap<String, Integer> getSumaHabilidades(List<User> estudiantes) {
+        HashMap<String, Integer> habilidades =  new HashMap<>();
+        habilidades.put("Liderazgo", 0);
+        habilidades.put("Organizacion", 0);
+        habilidades.put("Ideacion", 0);
+        habilidades.put("Desarrollo", 0);
+        habilidades.put("Comunicacion", 0);
+        for (User user: estudiantes) {
+            int liderazgoAnterior = habilidades.get("Liderazgo");
+            int organizacionAnterior = habilidades.get("Organizacion");
+            int ideacionAnterior = habilidades.get("Ideacion");
+            int desarrolloAnterior = habilidades.get("Desarrollo");
+            int comunicacionAnterior = habilidades.get("Comunicacion");
+
+            habilidades.put("Liderazgo", liderazgoAnterior + user.getLiderazgo());
+            habilidades.put("Organizacion", organizacionAnterior + user.getOrganizacion());
+            habilidades.put("Ideacion", ideacionAnterior + user.getIdeacion());
+            habilidades.put("Desarrollo", desarrolloAnterior + user.getDesarrollo());
+            habilidades.put("Comunicacion", comunicacionAnterior + user.getComunicación());
+        }
+        return habilidades;
+    }
+
+    private HashMap<String, Double> getMediaHabilidades(HashMap<String, Integer> sumaHabilidades, int numEstudiantes) {
+        HashMap<String, Double> mediaHabilidades = new HashMap<>();
+        for (String habilidad : sumaHabilidades.keySet()) {
+            mediaHabilidades.put(habilidad, sumaHabilidades.get(habilidad) / (double) numEstudiantes);
+        }
+        return mediaHabilidades;
+    }
+
+    private HashMap<String, Double> getDesviacionEstandarHabilidades(List<User> estudiantes, HashMap<String, Double> mediaHabilidades) {
+        HashMap<String, Double> sumaDesviacion = new HashMap<>();
+        HashMap<String, Double> desviacionEstandarHabilidades = new HashMap<>();
+        // Inicializar sumaDesviacion con ceros
+        for (String habilidad : mediaHabilidades.keySet()) {
+            sumaDesviacion.put(habilidad, 0.0);
+        }
+        // Calcular la suma de los cuadrados de las diferencias de cada habilidad
+        for (User user : estudiantes) {
+            sumaDesviacion.put("Liderazgo", sumaDesviacion.get("Liderazgo") + Math.pow(user.getLiderazgo() - mediaHabilidades.get("Liderazgo"), 2));
+            sumaDesviacion.put("Organizacion", sumaDesviacion.get("Organizacion") + Math.pow(user.getOrganizacion() - mediaHabilidades.get("Organizacion"), 2));
+            sumaDesviacion.put("Ideacion", sumaDesviacion.get("Ideacion") + Math.pow(user.getIdeacion() - mediaHabilidades.get("Ideacion"), 2));
+            sumaDesviacion.put("Desarrollo", sumaDesviacion.get("Desarrollo") + Math.pow(user.getDesarrollo() - mediaHabilidades.get("Desarrollo"), 2));
+            sumaDesviacion.put("Comunicacion", sumaDesviacion.get("Comunicacion") + Math.pow(user.getComunicación() - mediaHabilidades.get("Comunicacion"), 2));
+        }
+        // Calcular la desviación estándar para cada habilidad
+        int numEstudiantes = estudiantes.size();
+        for (String habilidad : sumaDesviacion.keySet()) {
+            desviacionEstandarHabilidades.put(habilidad, Math.sqrt(sumaDesviacion.get(habilidad) / numEstudiantes));
+        }
+        return desviacionEstandarHabilidades;
+    }
+
+    private List<Entry<String, Double>> ordenarDesviaciones(HashMap<String, Double> desviacionEstandarHabilidades) {
+        List<Entry<String, Double>> listaDesviaciones = new ArrayList<>(desviacionEstandarHabilidades.entrySet());
+        listaDesviaciones.sort((entry1, entry2) -> entry2.getValue().compareTo(entry1.getValue()));
+        return listaDesviaciones;
+    }
+
+    private double calcularHabilidadEstudiante(User user, String habilidadNecesaria) {
+        double liderazgo = user.getLiderazgo();
+        double organizacion = user.getOrganizacion();
+        double ideacion = user.getIdeacion();
+        double desarrollo = user.getDesarrollo();
+        double comunicacion = user.getComunicación();
+        double habilidadTotal;
+        switch (habilidadNecesaria) {
+            case "Liderazgo":
+                habilidadTotal = liderazgo;
+                break;
+            case "Organizacion":
+                habilidadTotal = organizacion;
+                break;
+            case "Ideacion":
+                habilidadTotal = ideacion;
+                break;
+            case "Desarrollo":
+                habilidadTotal = desarrollo;
+                break;
+            case "Comunicacion":
+                habilidadTotal = comunicacion;
+                break;
+            default:
+                habilidadTotal = 0.0;
+                break;
+        }
+        return habilidadTotal;
     }
 }
