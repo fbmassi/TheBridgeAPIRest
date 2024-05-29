@@ -16,8 +16,6 @@ public class Career {
     private String nombre;
     private String codigo;
     private String facultad;
-    @Relationship(type = "DE_CARRERA", direction = Relationship.Direction.INCOMING)
-    private List<Subject> materias;
 
     public Career() {
     }
@@ -38,13 +36,5 @@ public class Career {
 
     public String getFacultad() {
         return facultad;
-    }
-
-    public List<Subject> getMaterias() {
-        return materias;
-    }
-
-    public void setMaterias(List<Subject> materias) {
-        this.materias = materias;
     }
 }

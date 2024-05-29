@@ -3,35 +3,38 @@ package TheBridge.TheBridgeNeo4jApiREST.objects;
 public class UserDTO {
     private String name;
     private String username;
-    private String roles;
+    private String legajo;
 
-    public UserDTO(String name, String username, String roles) {
+    public UserDTO() {
+    }
+
+    public UserDTO(String name, String username, String legajo) {
         this.name = name;
         this.username = username;
-        this.roles = roles;
+        this.legajo = legajo;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getUsername() {
         return username;
+    }
+
+    public String getLegajo() {
+        return legajo;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setUsername(String username) {
         this.username = username;
     }
 
-    public String getRoles() {
-        return roles;
-    }
-
-    public void setRoles(String roles) {
-        this.roles = roles;
+    public void setLegajo(String legajo) {
+        this.legajo = legajo;
     }
 }

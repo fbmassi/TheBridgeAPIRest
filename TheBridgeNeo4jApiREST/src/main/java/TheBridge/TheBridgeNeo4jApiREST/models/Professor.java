@@ -18,10 +18,6 @@ public class Professor {
     private String email;
     private String contraseña;
 
-    @Relationship(type = "A_CARGO_DE", direction = Relationship.Direction.OUTGOING)
-    private List<Course> cursos;
-
-
     public Professor(String nombre, String legajo, String email) {
         this.setNombre(nombre);
         this.setEmail(email);

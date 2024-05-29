@@ -14,12 +14,7 @@ public class Course {
     @Id @GeneratedValue(GeneratedValue.UUIDGenerator.class)
     private UUID id;
     private String identificador;
-    @Relationship(type = "DE_MATERIA", direction = Relationship.Direction.OUTGOING)
-    private Subject materia;
-    @Relationship(type = "A_CARGO_DE", direction = Relationship.Direction.INCOMING)
-    private Professor profesor;
-    @Relationship(type = "ESTUDIA_EN", direction = Relationship.Direction.INCOMING)
-    private List<User> estudiantes;
+    private String nombre;
 
     public Course() {
     }
@@ -32,31 +27,12 @@ public class Course {
         this.identificador = identificador;
     }
 
-    public Professor getProfesor() {
-        return profesor;
+    public String getNombre() {
+        return nombre;
     }
 
-    public void setProfesor(Professor profesor) {
-        this.profesor = profesor;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
-    public Subject getMateria() {
-        return materia;
-    }
-
-    public void setMateria(Subject materia) {
-        this.materia = materia;
-    }
-
-    public List<User> getEstudiantes() {
-        return estudiantes;
-    }
-
-    public void setEstudiantes(List<User> estudiantes) {
-        this.estudiantes = estudiantes;
-    }
-
-    public void addEstudiante(User estudiante) {
-        this.estudiantes.add(estudiante);
-    }
 }

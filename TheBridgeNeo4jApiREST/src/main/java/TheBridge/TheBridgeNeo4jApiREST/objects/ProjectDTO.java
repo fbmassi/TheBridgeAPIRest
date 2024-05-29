@@ -1,37 +1,37 @@
 package TheBridge.TheBridgeNeo4jApiREST.objects;
 
-import TheBridge.TheBridgeNeo4jApiREST.models.Course;
 import TheBridge.TheBridgeNeo4jApiREST.models.Team;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
-public class ProyectoDTO {
+public class ProjectDTO {
 
-    private UUID id;
+    private UUID identifier;
     private String titulo;
     private String descripcion;
-    private ArrayList<String> links;
-    private String fotos;
-    private String equipo;
+    private List<String> links;
+    private List<String> fotos;
+    private Team equipo;
     private String curso;
 
-    public ProyectoDTO() {
+    public ProjectDTO() {
     }
 
-    public ProyectoDTO(UUID id, String titulo, String descripcion, String equipo, String curso) {
-        this.id = id;
+    public ProjectDTO(UUID identifier, String titulo, String descripcion, Team equipo, String curso) {
+        this.identifier = identifier;
         this.titulo = titulo;
         this.descripcion = descripcion;
         this.equipo = equipo;
     }
 
-    public UUID getId() {
-        return id;
+    public UUID getIdentifier() {
+        return identifier;
     }
 
-    public void setId(UUID id) {
-        this.id = id;
+    public void setIdentifier(UUID identifier) {
+        this.identifier = identifier;
     }
 
     public String getTitulo() {
@@ -50,27 +50,27 @@ public class ProyectoDTO {
         this.descripcion = descripcion;
     }
 
-    public ArrayList<String> getLinks() {
+    public List<String> getLinks() {
         return links;
     }
 
-    public void setLinks(ArrayList<String> links) {
+    public void setLinks(List<String> links) {
         this.links = links;
     }
 
-    public String getFotos() {
+    public List<String> getFotos() {
         return fotos;
     }
 
-    public void setFotos(String fotos) {
+    public void setFotos(List<String> fotos) {
         this.fotos = fotos;
     }
 
-    public String getEquipo() {
+    public Team getEquipo() {
         return equipo;
     }
 
-    public void setEquipo(String equipo) {
+    public void setEquipo(Team equipo) {
         this.equipo = equipo;
     }
 

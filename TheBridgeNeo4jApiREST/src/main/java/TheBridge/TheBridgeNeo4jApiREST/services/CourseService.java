@@ -44,7 +44,7 @@ public class CourseService {
     }
 
     public Course createCourse(CreateCourseRequest request) {
-
+        //TODO corregir
         if (courseRepository.findCourseById(request.getIdentificador()).isPresent()) {
             throw new ResponseStatusException(HttpStatusCode.valueOf(400));
         }
@@ -55,13 +55,7 @@ public class CourseService {
             throw new ResponseStatusException(HttpStatusCode.valueOf(400));
         }
 
-        Course curso = new Course();
-        curso.setIdentificador(request.getIdentificador());
-        curso.setMateria(materia.get());
-        curso.setEstudiantes(userRepository.findStudentsByEmails(request.getEmailsEstudiantes()));
-        curso.setProfesor(profesorRepository.findProfessorByEmail(request.getEmailProfesor())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404))));
 
-        return courseRepository.save(curso);
+        return null;
     }
 }

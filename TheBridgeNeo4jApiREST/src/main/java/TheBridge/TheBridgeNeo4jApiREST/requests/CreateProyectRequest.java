@@ -8,42 +8,66 @@ public class CreateProyectRequest {
     private String descripcion;
     private List<String> links;
     private List<String> fotos;
-    private String equipo;
-    private String curso;
+    private String equipoIdentifier;
+    private String cursoIdentifier;
 
     public CreateProyectRequest() {
     }
 
-    public CreateProyectRequest(String titulo, String descripcion, List<String> links, List<String> fotos, String equipo, String curso) {
+    public CreateProyectRequest(String titulo, String descripcion, List<String> links, List<String> fotos, String equipoIdentifier, String cursoIdentifier) {
         this.titulo = titulo;
         this.descripcion = descripcion;
         this.links = links;
         this.fotos = fotos;
-        this.equipo = equipo;
-        this.curso = curso;
+        this.equipoIdentifier = equipoIdentifier;
+        this.cursoIdentifier = cursoIdentifier;
     }
 
     public String getTitulo() {
         return titulo;
     }
 
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+
     public String getDescripcion() {
         return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
     public List<String> getLinks() {
         return links;
     }
 
+    public void setLinks(List<String> links) {
+        this.links = links;
+    }
+
     public List<String> getFotos() {
         return fotos;
     }
 
-    public String getEquipo() {
-        return equipo;
+    public void setFotos(List<String> fotos) {
+        this.fotos = fotos;
     }
 
-    public String getCurso() {
-        return curso;
+    public String getEquipoIdentifier() {
+        return equipoIdentifier;
+    }
+
+    public void setEquipoIdentifier(String equipoIdentifier) {
+        this.equipoIdentifier = equipoIdentifier;
+    }
+
+    public String getCursoIdentifier() {
+        return cursoIdentifier;
+    }
+
+    public void setCursoIdentifier(String cursoIdentifier) {
+        this.cursoIdentifier = cursoIdentifier;
     }
 }

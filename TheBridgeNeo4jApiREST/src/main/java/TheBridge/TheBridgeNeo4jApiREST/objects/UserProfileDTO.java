@@ -10,6 +10,7 @@ public class UserProfileDTO extends UserDTO{
 
     private List<Comentario> comentarios;
     private HashMap<String, Integer> valoracionesHashMap;
+    private List<ProjectDTO> proyects;
 
     public UserProfileDTO(String name, String username, String roles, List<Comentario> comentarios, List<Valoracion> valoraciones) {
         super(name, username, roles);

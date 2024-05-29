@@ -10,29 +10,23 @@ import java.util.UUID;
 public class Team {
 
     @Id @GeneratedValue(GeneratedValue.UUIDGenerator.class)
-    private UUID id;
+    private UUID identifier;
     @Property
     private String nombre;
-    @Relationship(type = "FORMA_PARTE_DE", direction = Relationship.Direction.INCOMING)
-    private List<User> estudiantes = new ArrayList<User>();
-    @Relationship(type = "REALIZADO_EN_EQUIPO_CON", direction = Relationship.Direction.INCOMING)
-    private List<Proyect> proyectos;
-
 
     public Team(String nombre) {
         this.nombre = nombre;
     };
 
-    public Team(String nombre, ArrayList<User> estudiantes) {
-        this.estudiantes = estudiantes;
-    };
-
-    public UUID getId() {
-        return id;
+    public Team() {
     }
 
-    public void setId(UUID id) {
-        this.id = id;
+    public UUID getIdentifier() {
+        return identifier;
+    }
+
+    public void setIdentifier(UUID identifier) {
+        this.identifier = identifier;
     }
 
     public String getNombre() {
@@ -41,25 +35,5 @@ public class Team {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
-    }
-
-    public List<User> getEstudiantes() {
-        return this.estudiantes;
-    };
-
-    public void addEstudiante(User estudiante) {
-        this.estudiantes.add(estudiante);
-    }
-
-    public List<Proyect> getProyecto() {
-        return proyectos;
-    }
-
-    public void setProyecto(List<Proyect> proyecto) {
-        this.proyectos = proyecto;
-    }
-
-    public void addProyecto(Proyect proyecto) {
-        this.proyectos.add(proyecto);
     }
 }

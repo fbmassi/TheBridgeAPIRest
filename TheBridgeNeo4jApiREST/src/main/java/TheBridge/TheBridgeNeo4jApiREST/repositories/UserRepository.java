@@ -31,6 +31,6 @@ public interface UserRepository extends Neo4jRepository<User, UUID> {
     @Query("MATCH (n)-[c:COMENTO_A]->(u:User{username: $username}) RETURN c.mensaje as mensaje, n.username as remitente, u.username as destinatario, c.timestamp as timestamp")
     List<ComentarioDTO> getComentariosByUser(String username);
 
-    @Query("MATCH (n)-[c:VALORO_A]->(u:User{username: $username}) ")
+    @Query("MATCH (n)-[c:VALORO_A]->(u:User{username: $username})")
     List<String> getTop3Aptitudes(String username);
 }

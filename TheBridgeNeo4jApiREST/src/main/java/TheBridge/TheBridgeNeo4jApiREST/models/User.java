@@ -1,5 +1,6 @@
 package TheBridge.TheBridgeNeo4jApiREST.models;
 
+import TheBridge.TheBridgeNeo4jApiREST.objects.UserDTO;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
@@ -96,5 +97,9 @@ public class User implements UserDetails {
                 ", username='" + username + '\'' +
                 ", roles='" + roles + '\'' +
                 '}';
+    }
+
+    public UserDTO toUserDTO(){
+        return new UserDTO(this.name, this.username, this.legajo);
     }
 }
