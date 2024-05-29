@@ -23,7 +23,7 @@ public interface UserRepository extends Neo4jRepository<User, UUID> {
 
     @Query("MATCH (destinatario:User {username: $emailDestinatario}) " +
             "MATCH (remitente:User {username: $emailRemitente}) " +
-            "CREATE (remitente)-[:VALORO_A {" +
+            "MERGE (remitente)-[:VALORO_A {" +
             "a1: $a1, a2: $a2, a3: $a3, mensaje: $mensaje, timestamp: $fecha" +
             "}]->(destinatario)")
     String valorarPerfilCompañero(String emailRemitente, String emailDestinatario, String a1, String a2, String a3, String mensaje, String fecha);

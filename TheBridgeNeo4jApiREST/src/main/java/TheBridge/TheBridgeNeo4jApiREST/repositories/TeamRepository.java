@@ -29,13 +29,13 @@ public interface TeamRepository  extends Neo4jRepository<Team, UUID> {
     @Query("MATCH (user:User{username: $username}) " +
             "WITH user " +
             "MATCH (e:Team{identifier: $identifier}) " +
-            "CREATE (user)-[:FORMA_PARTE_DE]->(e) RETURN user.username as username, user.name as name, user.legajo as legajo")
+            "MERGE (user)-[:FORMA_PARTE_DE]->(e) RETURN user.username as username, user.name as name, user.legajo as legajo")
     UserDTO addFirstStudentToTeam(String username, String identifier);
 
     @Query("MATCH (d:User{username: $propietario})-[:FORMA_PARTE_DE]->(e:Team {identifier: $identifier}) " +
             "WITH e " +
             "MATCH (u:User {username: $username}) " +
-            "CREATE (u)-[:FORMA_PARTE_DE]->(e) ")
+            "MERGE (u)-[:FORMA_PARTE_DE]->(e) ")
     void addStudentToTeam(String propietario, String username, String identifier);
 
     @Query("MATCH (d:User{username: $propietario})-[:FORMA_PARTE_DE]->(e:Team {identifier: $identifier}) " +

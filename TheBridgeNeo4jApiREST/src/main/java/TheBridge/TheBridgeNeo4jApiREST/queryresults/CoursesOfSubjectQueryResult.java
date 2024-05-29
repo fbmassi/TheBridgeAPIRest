@@ -7,20 +7,20 @@ import java.util.List;
 
 public class CoursesOfSubjectQueryResult {
 
-    private List<Course> course;
+    private List<Course> courses;
     private Subject subject;
 
-    public CoursesOfSubjectQueryResult(List<Course> course, Subject subject) {
-        this.course = course;
+    public CoursesOfSubjectQueryResult(List<Course> courses, Subject subject) {
+        this.courses = courses;
         this.subject = subject;
     }
 
     public List<Course> getCourse() {
-        return course;
+        return courses;
     }
 
     public void setCourse(List<Course> course) {
-        this.course = course;
+        this.courses = course;
     }
 
     public Subject getSubject() {

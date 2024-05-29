@@ -42,23 +42,31 @@ public class CourseService {
         return courseRepository.findCoursesOfSubject(subjectCode);
     }
 
-    public void addCourseToSubject(String courseCode, String subjectCode) {
+    public CoursesOfSubjectQueryResult addCourseToSubject(String courseCode, String subjectCode) {
         courseRepository.addCourseToSubject(courseCode, subjectCode);
+
+        return courseRepository.findCoursesOfSubject(subjectCode);
     }
 
-    public void removeCourseFromSubject(String courseCode, String subjectCode) {
+    public CoursesOfSubjectQueryResult removeCourseFromSubject(String courseCode, String subjectCode) {
         courseRepository.removeCourseFromSubject(courseCode, subjectCode);
+
+        return courseRepository.findCoursesOfSubject(subjectCode);
     }
 
     public CourseDTO getUsersOfCourse(String courseCode) {
         return courseRepository.findUsersOfCourse(courseCode).toCourseDTO();
     }
 
-    public void addUserToCourse(String username, String courseCode) {
+    public CourseDTO addUserToCourse(String username, String courseCode) {
         courseRepository.addUserToCourse(username, courseCode);
+
+        return courseRepository.findUsersOfCourse(courseCode).toCourseDTO();
     }
 
-    public void removeUserFromCourse(String username, String courseCode) {
+    public CourseDTO removeUserFromCourse(String username, String courseCode) {
         courseRepository.removeUserFromCourse(username, courseCode);
+
+        return courseRepository.findUsersOfCourse(courseCode).toCourseDTO();
     }
 }

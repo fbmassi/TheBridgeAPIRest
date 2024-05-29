@@ -46,16 +46,16 @@ public class CourseController {
 
     @PostMapping("/agregarCursoAMateria")
     public ResponseEntity<CoursesOfSubjectQueryResult> addCourseToSubject(@RequestParam String courseCode, @RequestParam String subjectCode) {
-        courseService.addCourseToSubject(courseCode, subjectCode);
+        CoursesOfSubjectQueryResult course = courseService.addCourseToSubject(courseCode, subjectCode);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(course, HttpStatus.OK);
     }
 
     @DeleteMapping("/quitarCursoAMateria")
     public ResponseEntity<CoursesOfSubjectQueryResult> removeCourseFromSubject(@RequestParam String courseCode, @RequestParam String subjectCode) {
-        courseService.removeCourseFromSubject(courseCode, subjectCode);
+        CoursesOfSubjectQueryResult course = courseService.removeCourseFromSubject(courseCode, subjectCode);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(course, HttpStatus.OK);
     }
 
     @GetMapping("/usuariosDeCurso")
@@ -69,7 +69,9 @@ public class CourseController {
     public ResponseEntity<CourseDTO> addUserToCourse(@RequestParam String username, @RequestParam String courseCode) {
         courseService.addUserToCourse(username, courseCode);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        CourseDTO course = courseService.getUsersOfCourse(courseCode);
+
+        return new ResponseEntity<>(course, HttpStatus.OK);
     }
 
     @PostMapping("/agregarVariosUsuariosACurso")
@@ -85,11 +87,13 @@ public class CourseController {
         return new ResponseEntity<>(course, HttpStatus.OK);
     }
 
-    @DeleteMapping("/quitarUsuarioDeCurso")
+    @DeleteMapping("/quitarUsuarioACurso")
     public ResponseEntity<CourseDTO> removeUserFromCourse(@RequestParam String username, @RequestParam String courseCode) {
         courseService.removeUserFromCourse(username, courseCode);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        CourseDTO course = courseService.getUsersOfCourse(courseCode);
+
+        return new ResponseEntity<>(course, HttpStatus.OK);
     }
 
 

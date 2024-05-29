@@ -20,7 +20,7 @@ public interface CourseRepository extends Neo4jRepository<Course, UUID> {
 
     @Query("MATCH (s:Subject {code: $subjectCode}) " +
             "MATCH (c:Course)-[:DE_MATERIA]->(s) " +
-            "RETURN c")
+            "RETURN collect(c) as courses, s as subject")
     CoursesOfSubjectQueryResult findCoursesOfSubject(String subjectCode);
 
     @Query("MATCH (c:Course {code: $courseCode}) " +
@@ -37,7 +37,7 @@ public interface CourseRepository extends Neo4jRepository<Course, UUID> {
     void removeCourseFromSubject(String courseCode, String subjectCode);
 
     @Query("MATCH (c:Course {code: $courseCode}) " +
-            "MATCH (c)<-[:DE_CURSO]-(u:User) " +
+            "MATCH (c)<-[:ESTUDIA_EN]-(u:User) " +
             "RETURN c as course, collect(u) as users")
     UsersOfCourseQueryResult findUsersOfCourse(String courseCode);
 
