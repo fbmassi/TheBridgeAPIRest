@@ -23,6 +23,12 @@ public class User implements UserDetails {
     private String introduccion;
     private String roles;
     private boolean enabled;
+    private int liderazgo;
+    private int organizacion;
+    private int ideacion;
+    private int desarrollo;
+    private int comunicación;
+
 
     public User() {
     }
@@ -108,5 +114,45 @@ public class User implements UserDetails {
 
     public UserDTO toUserDTO(){
         return new UserDTO(this.name, this.username, this.legajo);
+    }
+
+    public int getLiderazgo() {
+        return liderazgo;
+    }
+
+    public void setLiderazgo(int liderazgo) {
+        this.liderazgo = liderazgo;
+    }
+
+    public int getOrganizacion() {
+        return organizacion;
+    }
+
+    public void setOrganizacion(int organizacion) {
+        this.organizacion = organizacion;
+    }
+
+    public int getIdeacion() {
+        return ideacion;
+    }
+
+    public void setIdeacion(int ideacion) {
+        this.ideacion = ideacion;
+    }
+
+    public int getDesarrollo() {
+        return desarrollo;
+    }
+
+    public void setDesarrollo(int desarrollo) {
+        this.desarrollo = desarrollo;
+    }
+
+    public int getComunicación() {
+        return comunicación;
+    }
+
+    public void setComunicación(int comunicación) {
+        this.comunicación = comunicación;
     }
 }
