@@ -68,14 +68,25 @@ public class TeamController {
         return new ResponseEntity<>(nuevoEquipo, HttpStatus.OK);
     }
 
-    @GetMapping
-    public ResponseEntity<List<User>> getEstudiantesRecomendaciones(@RequestParam String identifier) {
+    @GetMapping("/{identifier}/reccomendations")
+    public ResponseEntity<List<UserProfileDTO>> getEstudiantesRecomendaciones(@RequestParam String identifier) {
         String habilidadNecesaria = this.getHabilidadNecesaria(identifier);
         List<User> totalEstudiantes = userService.getAllUsers();
-        List<User> estudiantesOrdenados = totalEstudiantes.stream()
-                .sorted(Comparator.comparingDouble(user -> -calcularHabilidadEstudiante(user, habilidadNecesaria)))
-                .collect(Collectors.toList());
-        return new ResponseEntity<>(estudiantesOrdenados, HttpStatus.OK);
+        Comparator<User> comparator = getComparatorByHabilidad(habilidadNecesaria.toLowerCase());
+        PriorityQueue<User> userQueue = new PriorityQueue<>(comparator);
+        userQueue.addAll(totalEstudiantes);
+        List<UserProfileDTO> sortedUsers = new ArrayList<>();
+        while (!userQueue.isEmpty()) {
+            User usuario = userQueue.poll();
+            UserProfileDTO userProfileDTO = new UserProfileDTO(usuario.getName(), usuario.getUsername(), usuario.getLegajo());
+            userProfileDTO.setLiderazgo(userProfileDTO.getLiderazgo());
+            userProfileDTO.setOrganizacion(userProfileDTO.getOrganizacion());
+            userProfileDTO.setIdeacion(userProfileDTO.getIdeacion());
+            userProfileDTO.setDesarrollo(usuario.getDesarrollo());
+            userProfileDTO.setComunicación(usuario.getComunicación());
+            sortedUsers.add(userProfileDTO);
+        }
+        return new ResponseEntity<>(sortedUsers, HttpStatus.OK);
     }
 
     private String getHabilidadNecesaria(String identifier) {
@@ -176,5 +187,22 @@ public class TeamController {
                 break;
         }
         return habilidadTotal;
+    }
+
+    private Comparator<User> getComparatorByHabilidad(String habilidad) {
+        switch (habilidad.toLowerCase()) {
+            case "liderazgo":
+                return Comparator.comparingInt(User::getLiderazgo).reversed();
+            case "organizacion":
+                return Comparator.comparingInt(User::getOrganizacion).reversed();
+            case "ideacion":
+                return Comparator.comparingInt(User::getIdeacion).reversed();
+            case "desarrollo":
+                return Comparator.comparingInt(User::getDesarrollo).reversed();
+            case "comunicacion":
+                return Comparator.comparingInt(User::getComunicación).reversed();
+            default:
+                throw new IllegalArgumentException("Habilidad desconocida: " + habilidad);
+        }
     }
 }

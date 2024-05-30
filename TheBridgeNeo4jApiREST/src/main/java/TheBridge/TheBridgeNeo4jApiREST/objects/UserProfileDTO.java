@@ -6,41 +6,21 @@ import TheBridge.TheBridgeNeo4jApiREST.models.Valoracion;
 import java.util.HashMap;
 import java.util.List;
 
-public class UserProfileDTO extends UserDTO{
+public class UserProfileDTO {
 
-    private List<Comentario> comentarios;
-    private HashMap<String, Integer> valoracionesHashMap;
-    private List<ProjectDTO> proyects;
+    private String name;
+    private String username;
+    private String legajo;
     private int liderazgo;
     private int organizacion;
     private int ideacion;
     private int desarrollo;
     private int comunicación;
 
-    public UserProfileDTO(String name, String username, String roles, List<Comentario> comentarios, List<Valoracion> valoraciones) {
-        super(name, username, roles);
-        this.comentarios = comentarios;
-        this.valoracionesHashMap = new HashMap<String, Integer>();
-        for (Valoracion valoracion : valoraciones) {
-            if (valoracionesHashMap.containsKey(valoracion.getAptitud1())) {
-                valoracionesHashMap.put(valoracion.getAptitud1(), valoracionesHashMap.get(valoracion.getAptitud1()) + 1);
-            } else {
-                valoracionesHashMap.put(valoracion.getAptitud1(), 1);
-            }
-        }
-    }
-
-    public List<Comentario> getComentarios() {
-        return comentarios;
-    }
-    public void setComentarios(List<Comentario> comentarios) {
-        this.comentarios = comentarios;
-    }
-    public HashMap<String, Integer> getValoraciones() {
-        return valoracionesHashMap;
-    }
-    public void setValoraciones(HashMap<String, Integer> valoraciones) {
-        this.valoracionesHashMap = valoraciones;
+    public UserProfileDTO(String name, String username, String legajo) {
+        this.name = name;
+        this.username = username;
+        this.legajo = legajo;
     }
 
     public int getLiderazgo() {
@@ -81,5 +61,29 @@ public class UserProfileDTO extends UserDTO{
 
     public void setComunicación(int comunicación) {
         this.comunicación = comunicación;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getLegajo() {
+        return legajo;
+    }
+
+    public void setLegajo(String legajo) {
+        this.legajo = legajo;
     }
 }
