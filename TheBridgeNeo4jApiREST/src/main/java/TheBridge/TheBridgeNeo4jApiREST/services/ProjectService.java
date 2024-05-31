@@ -2,47 +2,65 @@ package TheBridge.TheBridgeNeo4jApiREST.services;
 
 import TheBridge.TheBridgeNeo4jApiREST.models.Project;
 import TheBridge.TheBridgeNeo4jApiREST.queryresults.ProjectTeamCourseQueryResult;
-import TheBridge.TheBridgeNeo4jApiREST.repositories.CourseRepository;
 import TheBridge.TheBridgeNeo4jApiREST.repositories.ProjectRepository;
-import TheBridge.TheBridgeNeo4jApiREST.repositories.TeamRepository;
 import TheBridge.TheBridgeNeo4jApiREST.requests.CreateProyectRequest;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.security.Principal;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ProjectService {
-    private final ProjectRepository proyectoRepository;
-    private final TeamRepository teamRepository;
-    private final CourseRepository courseRepository;
+    private final ProjectRepository projectRepository;
 
-    public ProjectService(ProjectRepository proyectoRepository, TeamRepository teamRepository, CourseRepository courseRepository) {
-        this.proyectoRepository = proyectoRepository;
-        this.teamRepository = teamRepository;
-        this.courseRepository = courseRepository;
-    }
-
-    public List<Project> getAllProjects() {
-        return proyectoRepository.findAll();
+    public ProjectService(ProjectRepository projectRepository) {
+        this.projectRepository = projectRepository;
     }
 
     public Project getProjectByIdentifier(String identifier) {
-        return proyectoRepository.findProyectByIdentifier(identifier).orElseThrow(()-> new ResponseStatusException(HttpStatusCode.valueOf(404)));
+        return projectRepository.findProyectByIdentifier(identifier)
+                .orElseThrow(()-> new ResponseStatusException(HttpStatusCode.valueOf(404)));
     }
 
     public List<Project> getProjectsByUser(String username) {
-        return proyectoRepository.findProjectsByUser(username);
+        return projectRepository.findProjectsByUser(username);
     }
 
     public ProjectTeamCourseQueryResult getProjectWithTeamAndCourseByIdentifier(String identifier) {
-        return proyectoRepository.findProyectWithTeamAndCourseByIdentifier(identifier);
+        return projectRepository.findProyectWithTeamAndCourseByIdentifier(identifier);
     }
 
-    public Project createProject(CreateProyectRequest request) {
-        //TODO: Implementar la creación de un proyecto
+    public ProjectTeamCourseQueryResult createProject(Principal principal, CreateProyectRequest request) {
 
-        return null;
+        if (!projectRepository.isUserInCourseAndTeam(principal.getName(), request.getCursoIdentifier(), request.getEquipoIdentifier()).equals(principal.getName())) {
+            throw new ResponseStatusException(HttpStatusCode.valueOf(403));
+        }
+
+        Project project = new Project(request.getTitulo(), request.getDescripcion());
+
+        project.setPortadaBase64(request.getPortadaBase64());
+        project.setLinks(request.getLinks());
+
+        projectRepository.save(project);
+
+        projectRepository.addCourseToProject(project.getIdentifier().toString(), request.getCursoIdentifier());
+        projectRepository.addTeamToProject(project.getIdentifier().toString(), request.getEquipoIdentifier());
+
+        return projectRepository.findProyectWithTeamAndCourseByIdentifier(project.getIdentifier().toString());
+    }
+
+    public void deleteProject(Principal principal, String identifier) {
+        Project project = projectRepository.findProyectByIdentifier(identifier)
+                .orElseThrow(()-> new ResponseStatusException(HttpStatusCode.valueOf(404)));
+
+        if (!projectRepository.findProjectsByUser(principal.getName()).stream().map(Project::getIdentifier).toList().contains(UUID.fromString(identifier)))
+        {
+            throw new ResponseStatusException(HttpStatusCode.valueOf(403));
+        }
+
+        projectRepository.deleteProject(identifier);
     }
 }

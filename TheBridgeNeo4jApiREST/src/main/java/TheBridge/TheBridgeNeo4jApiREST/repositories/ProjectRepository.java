@@ -1,6 +1,7 @@
 package TheBridge.TheBridgeNeo4jApiREST.repositories;
 
 import TheBridge.TheBridgeNeo4jApiREST.models.Project;
+import TheBridge.TheBridgeNeo4jApiREST.models.User;
 import TheBridge.TheBridgeNeo4jApiREST.queryresults.ProjectTeamCourseQueryResult;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
@@ -11,10 +12,15 @@ import java.util.UUID;
 
 public interface ProjectRepository extends Neo4jRepository<Project, UUID> {
 
-    @Query("MATCH (p:Proyecto {identifier: $identifier}) RETURN p")
+    @Query("MATCH (p:Project {identifier: $identifier}) RETURN p")
     Optional<Project> findProyectByIdentifier(String identifier);
 
-    @Query("MATCH (p:Proyecto {identifier: $identifier}) " +
+    @Query("MATCH (u:User {username: $username})-[:FORMA_PARTE_DE]->(t:Team {identifier: $teamIdentifier}) " +
+            "MATCH (u)-[:ESTUDIA_EN]->(c:Course {identifier: $courseIdentifier}) " +
+            "RETURN u.username")
+    String isUserInCourseAndTeam(String username, String courseIdentifier, String teamIdentifier);
+
+    @Query("MATCH (p:Project {identifier: $identifier}) " +
             "WITH p " +
             "MATCH (p)-[:CON_EQUIPO]->(t:Team) " +
             "MATCH (p)-[:PARA_CURSO]->(c:Course) " +
@@ -24,13 +30,20 @@ public interface ProjectRepository extends Neo4jRepository<Project, UUID> {
     @Query("MATCH (u:User {username: $username})-[:FORMA_PARTE_DE]->(t:Team) " +
             "WITH t " +
             "MATCH (p)-[:CON_EQUIPO]->(t)" +
-            "RETURN p")
+            "RETURN collect(p) as project")
     List<Project> findProjectsByUser(String username);
 
-    @Query("MATCH (p:Proyecto {titulo: $titulo, descripcion: $descripcion}) " +
-            "CREATE (p)-[:CON_EQUIPO]->(t:Team {identifier: $equipoIdentifier}) " +
-            "CREATE (p)-[:PARA_CURSO]->(c:Course {identifier: $cursoIdentifier}) " +
-            "SET p.links = $links, p.fotos = $fotos " +
-            "RETURN p as project, t as team, c as course")
-    ProjectTeamCourseQueryResult createProject(String titulo, String descripcion, List<String> links, List<String> fotos, String equipoIdentifier, String cursoIdentifier);
+    @Query("MATCH (p:Project {identifier: $projectIdentifier}) " +
+            "MATCH (c:Course {identifier: $courseIdentifier}) " +
+            "MERGE (p)-[:PARA_CURSO]->(c)")
+    void addCourseToProject(String projectIdentifier, String courseIdentifier);
+
+    @Query("MATCH (p:Project {identifier: $projectIdentifier}) " +
+            "MATCH (t:Team {identifier: $teamIdentifier}) " +
+            "MERGE (p)-[:CON_EQUIPO]->(t)")
+    void addTeamToProject(String projectIdentifier, String teamIdentifier);
+
+    @Query("MATCH (p:Project {identifier: $identifier}) " +
+            "DETACH DELETE p")
+    void deleteProject(String identifier);
 }

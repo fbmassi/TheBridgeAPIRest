@@ -1,5 +1,6 @@
 package TheBridge.TheBridgeNeo4jApiREST.objects;
 
+import TheBridge.TheBridgeNeo4jApiREST.models.Course;
 import TheBridge.TheBridgeNeo4jApiREST.models.Team;
 
 import java.util.ArrayList;
@@ -12,18 +13,27 @@ public class ProjectDTO {
     private String titulo;
     private String descripcion;
     private List<String> links;
-    private List<String> fotos;
+    private String portadaBase64;
     private Team equipo;
-    private String curso;
+    private Course curso;
 
     public ProjectDTO() {
     }
 
-    public ProjectDTO(UUID identifier, String titulo, String descripcion, Team equipo, String curso) {
+    public ProjectDTO(UUID identifier, String titulo, String descripcion) {
         this.identifier = identifier;
         this.titulo = titulo;
         this.descripcion = descripcion;
+    }
+
+    public ProjectDTO(UUID identifier, String titulo, String descripcion, List<String> links, String portadaBase64, Team equipo, Course curso) {
+        this.identifier = identifier;
+        this.titulo = titulo;
+        this.descripcion = descripcion;
+        this.links = links;
+        this.portadaBase64 = portadaBase64;
         this.equipo = equipo;
+        this.curso = curso;
     }
 
     public UUID getIdentifier() {
@@ -58,12 +68,12 @@ public class ProjectDTO {
         this.links = links;
     }
 
-    public List<String> getFotos() {
-        return fotos;
+    public String getPortadaBase64() {
+        return portadaBase64;
     }
 
-    public void setFotos(List<String> fotos) {
-        this.fotos = fotos;
+    public void setPortadaBase64(String portadaBase64) {
+        this.portadaBase64 = portadaBase64;
     }
 
     public Team getEquipo() {
@@ -74,11 +84,11 @@ public class ProjectDTO {
         this.equipo = equipo;
     }
 
-    public String getCurso() {
+    public Course getCurso() {
         return curso;
     }
 
-    public void setCurso(String curso) {
+    public void setCurso(Course curso) {
         this.curso = curso;
     }
 }

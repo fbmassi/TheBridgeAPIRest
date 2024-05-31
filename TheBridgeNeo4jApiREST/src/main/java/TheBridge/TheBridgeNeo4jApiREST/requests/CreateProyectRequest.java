@@ -7,18 +7,18 @@ public class CreateProyectRequest {
     private String titulo;
     private String descripcion;
     private List<String> links;
-    private List<String> fotos;
+    private String portadaBase64;
     private String equipoIdentifier;
     private String cursoIdentifier;
 
     public CreateProyectRequest() {
     }
 
-    public CreateProyectRequest(String titulo, String descripcion, List<String> links, List<String> fotos, String equipoIdentifier, String cursoIdentifier) {
+    public CreateProyectRequest(String titulo, String descripcion, List<String> links, String portadaBase64, String equipoIdentifier, String cursoIdentifier) {
         this.titulo = titulo;
         this.descripcion = descripcion;
         this.links = links;
-        this.fotos = fotos;
+        this.portadaBase64 = portadaBase64;
         this.equipoIdentifier = equipoIdentifier;
         this.cursoIdentifier = cursoIdentifier;
     }
@@ -47,12 +47,12 @@ public class CreateProyectRequest {
         this.links = links;
     }
 
-    public List<String> getFotos() {
-        return fotos;
+    public String getPortadaBase64() {
+        return portadaBase64;
     }
 
-    public void setFotos(List<String> fotos) {
-        this.fotos = fotos;
+    public void setPortadaBase64(String portadaBase64) {
+        this.portadaBase64 = portadaBase64;
     }
 
     public String getEquipoIdentifier() {

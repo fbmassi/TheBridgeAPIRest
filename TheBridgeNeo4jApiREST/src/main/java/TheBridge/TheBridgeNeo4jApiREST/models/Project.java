@@ -9,13 +9,11 @@ import java.util.UUID;
 public class Project {
 
     @Id @GeneratedValue(GeneratedValue.UUIDGenerator.class)
-    private UUID id;
-    @GeneratedValue(GeneratedValue.UUIDGenerator.class)
     private UUID identifier;
     private String titulo;
     private String descripcion;
+    private String portadaBase64;
     private List<String> links;
-    private List<String> fotos;
 
     public Project() {
     }
@@ -39,12 +37,12 @@ public class Project {
         return this.titulo;
     }
 
-    public List<String> getFotos() {
-        return fotos;
+    public String getPortadaBase64() {
+        return portadaBase64;
     }
 
-    public void setFotos(List<String> fotos) {
-        this.fotos = fotos;
+    public void setPortadaBase64(String portadaBase64) {
+        this.portadaBase64 = portadaBase64;
     }
 
     public List<String> getLinks() {

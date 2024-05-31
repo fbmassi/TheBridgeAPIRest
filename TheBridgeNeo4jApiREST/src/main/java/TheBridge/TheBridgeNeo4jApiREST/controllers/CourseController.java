@@ -30,6 +30,17 @@ public class CourseController {
         return new ResponseEntity<>(course, HttpStatus.OK);
     }
 
+    @GetMapping("/deIdenfifier")
+    public ResponseEntity<Course> getCourseByIdentifier(@RequestParam String identifier) {
+        Course course = courseService.getCourseByIdentifier(identifier);
+
+        if (course == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(course, HttpStatus.OK);
+    }
+
     @GetMapping("/deMateria")
     public ResponseEntity<CoursesOfSubjectQueryResult> getCoursesOfSubject(@RequestParam String subjectCode) {
         CoursesOfSubjectQueryResult courses = courseService.getCoursesOfSubject(subjectCode);

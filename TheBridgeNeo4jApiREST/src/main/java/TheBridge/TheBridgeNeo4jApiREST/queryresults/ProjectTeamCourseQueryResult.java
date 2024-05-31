@@ -3,6 +3,7 @@ package TheBridge.TheBridgeNeo4jApiREST.queryresults;
 import TheBridge.TheBridgeNeo4jApiREST.models.Course;
 import TheBridge.TheBridgeNeo4jApiREST.models.Project;
 import TheBridge.TheBridgeNeo4jApiREST.models.Team;
+import TheBridge.TheBridgeNeo4jApiREST.objects.ProjectDTO;
 
 public class ProjectTeamCourseQueryResult {
 
@@ -38,5 +39,16 @@ public class ProjectTeamCourseQueryResult {
 
     public void setCourse(Course course) {
         this.course = course;
+    }
+
+    public ProjectDTO toProjectDTO() {
+        return new ProjectDTO(
+                project.getIdentifier(),
+                project.getTitulo(),
+                project.getDescripcion(),
+                project.getLinks(),
+                project.getPortadaBase64(),
+                team,
+                course);
     }
 }

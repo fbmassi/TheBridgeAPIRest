@@ -20,26 +20,22 @@ public class ProjectController {
 
     public ProjectController(ProjectService proyectoService) { this.proyectoService = proyectoService; }
 
-    @GetMapping("/{indentifier}")
-    public ResponseEntity<ProjectDTO> proyectoDetails(@PathVariable String identifier) {
+    @GetMapping("/deIdentifier")
+    public ResponseEntity<ProjectDTO> proyectoDetails(@RequestParam String identifier) {
         ProjectTeamCourseQueryResult result = proyectoService.getProjectWithTeamAndCourseByIdentifier(identifier);
 
-        ProjectDTO projectDTO = new ProjectDTO(
-        );
-
-
-        return new ResponseEntity<>(projectDTO, HttpStatus.OK);
+        return new ResponseEntity<>(result.toProjectDTO(), HttpStatus.OK);
     }
 
     @PostMapping("/crearProyecto")
-    public ResponseEntity<ProjectDTO> crearProyecto(@RequestBody CreateProyectRequest request) {
-        Project projecto = proyectoService.createProject(request);
+    public ResponseEntity<ProjectTeamCourseQueryResult> crearProyecto(Principal principal, @RequestBody CreateProyectRequest request) {
+        ProjectTeamCourseQueryResult result = proyectoService.createProject(principal, request);
 
-        return new ResponseEntity<>(null, HttpStatus.CREATED);
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
-    @GetMapping("/proyectosUsuario/{username}")
-    public ResponseEntity<List<Project>> proyectosUsuario(@PathVariable String username) {
+    @GetMapping("/deUsuario")
+    public ResponseEntity<List<Project>> proyectosDeUsuario(@RequestParam String username) {
         List<Project> proyectos = proyectoService.getProjectsByUser(username);
 
         return new ResponseEntity<>(proyectos, HttpStatus.OK);
@@ -50,6 +46,13 @@ public class ProjectController {
         List<Project> proyectos = proyectoService.getProjectsByUser(principal.getName());
 
         return new ResponseEntity<>(proyectos, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/eliminarProyecto")
+    public ResponseEntity<Void> eliminarProyecto(Principal principal, @RequestParam String identifier) {
+        proyectoService.deleteProject(principal, identifier);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 }
