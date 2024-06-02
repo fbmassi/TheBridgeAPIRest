@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.util.*;
 import java.util.Map.Entry;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/equipos")
@@ -69,22 +68,22 @@ public class TeamController {
     }
 
     @GetMapping("/{identifier}/reccomendations")
-    public ResponseEntity<List<UserProfileDTO>> getEstudiantesRecomendaciones(@RequestParam String identifier) {
+    public ResponseEntity<List<UserHabilitiesDTO>> getEstudiantesRecomendaciones(@RequestParam String identifier) {
         String habilidadNecesaria = this.getHabilidadNecesaria(identifier);
         List<User> totalEstudiantes = userService.getAllUsers();
         Comparator<User> comparator = getComparatorByHabilidad(habilidadNecesaria.toLowerCase());
         PriorityQueue<User> userQueue = new PriorityQueue<>(comparator);
         userQueue.addAll(totalEstudiantes);
-        List<UserProfileDTO> sortedUsers = new ArrayList<>();
+        List<UserHabilitiesDTO> sortedUsers = new ArrayList<>();
         while (!userQueue.isEmpty()) {
             User usuario = userQueue.poll();
-            UserProfileDTO userProfileDTO = new UserProfileDTO(usuario.getName(), usuario.getUsername(), usuario.getLegajo());
-            userProfileDTO.setLiderazgo(userProfileDTO.getLiderazgo());
-            userProfileDTO.setOrganizacion(userProfileDTO.getOrganizacion());
-            userProfileDTO.setIdeacion(userProfileDTO.getIdeacion());
-            userProfileDTO.setDesarrollo(usuario.getDesarrollo());
-            userProfileDTO.setComunicación(usuario.getComunicación());
-            sortedUsers.add(userProfileDTO);
+            UserHabilitiesDTO userHabilitiesDTO = new UserHabilitiesDTO(usuario.getName(), usuario.getUsername(), usuario.getLegajo());
+            userHabilitiesDTO.setLiderazgo(userHabilitiesDTO.getLiderazgo());
+            userHabilitiesDTO.setOrganizacion(userHabilitiesDTO.getOrganizacion());
+            userHabilitiesDTO.setIdeacion(userHabilitiesDTO.getIdeacion());
+            userHabilitiesDTO.setDesarrollo(usuario.getDesarrollo());
+            userHabilitiesDTO.setComunicación(usuario.getComunicación());
+            sortedUsers.add(userHabilitiesDTO);
         }
         return new ResponseEntity<>(sortedUsers, HttpStatus.OK);
     }

@@ -1,14 +1,7 @@
 package TheBridge.TheBridgeNeo4jApiREST.controllers;
 
-import TheBridge.TheBridgeNeo4jApiREST.models.CategoriasValoracion;
-import TheBridge.TheBridgeNeo4jApiREST.models.Comentario;
 import TheBridge.TheBridgeNeo4jApiREST.models.User;
-import TheBridge.TheBridgeNeo4jApiREST.models.Valoracion;
-import TheBridge.TheBridgeNeo4jApiREST.objects.ComentarioDTO;
 import TheBridge.TheBridgeNeo4jApiREST.objects.UserDTO;
-import TheBridge.TheBridgeNeo4jApiREST.objects.ValoracionDTO;
-import TheBridge.TheBridgeNeo4jApiREST.requests.AddComentarioRequest;
-import TheBridge.TheBridgeNeo4jApiREST.requests.AddValoracionRequest;
 import TheBridge.TheBridgeNeo4jApiREST.requests.CreateUserRequest;
 import TheBridge.TheBridgeNeo4jApiREST.services.UserService;
 import org.springframework.http.HttpStatus;
@@ -63,5 +56,14 @@ public class UserController {
         }
 
         return new ResponseEntity<String>("Usuarios precargados: "+ i, HttpStatus.CREATED);
+    }
+
+    @PatchMapping("/modifyIntroduction")
+    public ResponseEntity<UserDTO> modifyUserIntroduction(Principal principal, @RequestParam String introduction) {
+        User user = userService.modifyUserIntroduction(principal.getName(), introduction);
+
+        UserDTO responseUser = new UserDTO(user.getName(),user.getUsername(),user.getRoles());
+
+        return new ResponseEntity<>(responseUser, HttpStatus.OK);
     }
 }

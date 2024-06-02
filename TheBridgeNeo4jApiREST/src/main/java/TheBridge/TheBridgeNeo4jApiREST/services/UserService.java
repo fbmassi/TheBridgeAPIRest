@@ -75,4 +75,8 @@ public class UserService {
         userRepository.save(estudiante);
         return 1;
     }
+
+    public User modifyUserIntroduction(String username, String introduction) {
+        return userRepository.modifyUserIntroduction(username, introduction);
+    }
 }

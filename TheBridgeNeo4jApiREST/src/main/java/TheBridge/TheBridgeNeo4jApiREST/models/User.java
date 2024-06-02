@@ -20,7 +20,7 @@ public class User implements UserDetails {
     private String legajo;
     private String username;
     private String password;
-    private String introduccion;
+    private String introduction;
     private String roles;
     private boolean enabled;
     private int liderazgo;
@@ -47,8 +47,8 @@ public class User implements UserDetails {
     public String getPassword() {
         return password;
     }
-    public String getIntroduccion() {
-        return introduccion;
+    public String getIntroduction() {
+        return introduction;
     }
     public String getRoles() {
         return roles;
@@ -69,8 +69,8 @@ public class User implements UserDetails {
     public void setPassword(String password) {
         this.password = password;
     }
-    public void setIntroduccion(String introduccion) {
-        this.introduccion = introduccion;
+    public void setIntroduction(String introduction) {
+        this.introduction = introduction;
     }
     public void setRoles(String roles) {
         this.roles = roles;

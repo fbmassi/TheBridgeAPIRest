@@ -1,9 +1,9 @@
 package TheBridge.TheBridgeNeo4jApiREST.controllers;
 
-import TheBridge.TheBridgeNeo4jApiREST.models.Comentario;
+import TheBridge.TheBridgeNeo4jApiREST.models.Comment;
 import TheBridge.TheBridgeNeo4jApiREST.models.User;
 import TheBridge.TheBridgeNeo4jApiREST.models.Valoracion;
-import TheBridge.TheBridgeNeo4jApiREST.objects.ComentarioDTO;
+import TheBridge.TheBridgeNeo4jApiREST.objects.CommentDTO;
 import TheBridge.TheBridgeNeo4jApiREST.objects.ValoracionDTO;
 import TheBridge.TheBridgeNeo4jApiREST.requests.AddComentarioRequest;
 import TheBridge.TheBridgeNeo4jApiREST.requests.AddValoracionRequest;
@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -29,10 +30,10 @@ public class InteractionUserController {
     }
 
     @PostMapping("/comentarPerfil")
-    public ResponseEntity<ComentarioDTO> addCommentarioAEstudiante(Principal principal, @RequestBody AddComentarioRequest comentarioRequest) {
+    public ResponseEntity<CommentDTO> addCommentarioAEstudiante(Principal principal, @RequestBody AddComentarioRequest comentarioRequest) {
         User remitente = userService.getUserByUsername(principal.getName());
         User destinatario = userService.getUserByUsername(comentarioRequest.getDestinatario());
-        Comentario comentario = new Comentario(
+        Comment comentario = new Comment(
                 comentarioRequest.getMensaje(),
                 destinatario
         );
@@ -40,7 +41,7 @@ public class InteractionUserController {
         //TODO: Add validation to check if the comment is not toxic
         interactionUserService.realizarComentario(remitente, comentario);
 
-        ComentarioDTO responseComment = new ComentarioDTO(comentario.getMensaje(), principal.getName(), comentario.getDestinatario().getUsername());
+        CommentDTO responseComment = new CommentDTO(comentario.getMensaje(), principal.getName(), comentario.getDestinatario().getUsername(), comentario.getTimestamp());
 
         return new ResponseEntity<>(responseComment, HttpStatus.CREATED);
     }
@@ -51,9 +52,7 @@ public class InteractionUserController {
         User destinatario = userService.getUserByUsername(valoracionRequest.getDestinatario());
 
         Valoracion valoracion = new Valoracion(
-                valoracionRequest.getAptitud1(),
-                valoracionRequest.getAptitud2(),
-                valoracionRequest.getAptitud3(),
+                valoracionRequest.getVotos(),
                 destinatario,
                 valoracionRequest.getMensaje()
         );
@@ -70,9 +69,28 @@ public class InteractionUserController {
     }
 
     @GetMapping("/misComentarios")
-    public ResponseEntity<List<ComentarioDTO>> getComentariosByUser(Principal principal) {
-        List<ComentarioDTO> comentarios = interactionUserService.getComentariosByUser(principal.getName());
+    public ResponseEntity<List<CommentDTO>> getComentariosByUser(Principal principal) {
+        List<CommentDTO> comentarios = interactionUserService.getComentariosByUser(principal.getName());
 
         return new ResponseEntity<>(comentarios, HttpStatus.OK);
+    }
+
+    @GetMapping("/misValoraciones")
+    public ResponseEntity<HashMap<String, Float>> getValoracionesByUser(Principal principal) {
+        HashMap<String, Float> valoraciones = interactionUserService.getSkillsByUsername(principal.getName());
+
+        return new ResponseEntity<>(valoraciones, HttpStatus.OK);
+    }
+
+    @PatchMapping("/ocultarComentario")
+    public ResponseEntity<Void> ocultarComentario(Principal principal, @RequestParam String remitente, @RequestParam String timestamp) {
+        interactionUserService.ocultarComentario(principal, remitente, timestamp);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PatchMapping("/mostrarComentario")
+    public ResponseEntity<Void> mostrarComentario(Principal principal, @RequestParam String remitente, @RequestParam String timestamp) {
+        interactionUserService.mostrarComentario(principal, remitente, timestamp);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

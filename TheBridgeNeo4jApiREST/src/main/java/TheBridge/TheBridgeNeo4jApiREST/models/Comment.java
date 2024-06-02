@@ -3,7 +3,7 @@ package TheBridge.TheBridgeNeo4jApiREST.models;
 import org.springframework.data.neo4j.core.schema.*;
 
 @RelationshipProperties
-public class Comentario {
+public class Comment {
 
 
     @RelationshipId
@@ -21,7 +21,7 @@ public class Comentario {
     @TargetNode
     private User destinatario;
 
-    public Comentario(String mensaje, User destinatario) {
+    public Comment(String mensaje, User destinatario) {
         this.mensaje = mensaje;
         this.destinatario = destinatario;
         this.timestamp = java.time.LocalDateTime.now().toString();

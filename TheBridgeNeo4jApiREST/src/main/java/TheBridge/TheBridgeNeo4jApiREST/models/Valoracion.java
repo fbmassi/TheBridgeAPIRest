@@ -3,6 +3,7 @@ package TheBridge.TheBridgeNeo4jApiREST.models;
 import org.springframework.data.neo4j.core.schema.*;
 
 import java.util.Arrays;
+import java.util.List;
 
 @RelationshipProperties
 public class Valoracion {
@@ -10,11 +11,7 @@ public class Valoracion {
     @RelationshipId
     private String id;
     @Property
-    private String aptitud1;
-    @Property
-    private String aptitud2;
-    @Property
-    private String aptitud3;
+    private List<String> votos;
     @Property
     private String mensaje;
 
@@ -24,24 +21,14 @@ public class Valoracion {
     public Valoracion() {
     }
 
-    public Valoracion(String aptitud1, String aptitud2, String aptitud3, User destinatario, String mensaje) {
-        this.aptitud1 = aptitud1;
-        this.aptitud2 = aptitud2;
-        this.aptitud3 = aptitud3;
+    public Valoracion(List<String> votos, User destinatario, String mensaje) {
+        this.votos = votos;
         this.destinatario = destinatario;
         this.mensaje = mensaje;
     }
 
-    public String getAptitud1() {
-        return aptitud1;
-    }
-
-    public String getAptitud2() {
-        return aptitud2;
-    }
-
-    public String getAptitud3() {
-        return aptitud3;
+    public List<String> getVotos() {
+        return votos;
     }
 
     public User getDestinatario() {
@@ -54,8 +41,6 @@ public class Valoracion {
 
     public boolean isValid() {
         //check if every aptitud is in the enum CategoriasValoracion
-        return Arrays.stream(CategoriasValoracion.values()).anyMatch(c -> c.name().equals(aptitud1)) &&
-                Arrays.stream(CategoriasValoracion.values()).anyMatch(c -> c.name().equals(aptitud2)) &&
-                Arrays.stream(CategoriasValoracion.values()).anyMatch(c -> c.name().equals(aptitud3));
+        return votos.stream().allMatch(voto -> Arrays.stream(CategoriasValoracion.values()).anyMatch(categoria -> categoria.name().equals(voto)));
     }
 }

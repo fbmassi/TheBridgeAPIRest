@@ -2,32 +2,30 @@ package TheBridge.TheBridgeNeo4jApiREST.objects;
 
 import TheBridge.TheBridgeNeo4jApiREST.models.Valoracion;
 
+import java.util.List;
+
 public class ValoracionDTO {
     private String destinatario;
-    private String aptitud1;
-    private String aptitud2;
-    private String aptitud3;
+    private List<String> votos;
 
     public ValoracionDTO(Valoracion valoracion){
         this.destinatario = valoracion.getDestinatario().getUsername();
-        this.aptitud1 = valoracion.getAptitud1();
-        this.aptitud2 = valoracion.getAptitud2();
-        this.aptitud3 = valoracion.getAptitud3();
+        this.votos = valoracion.getVotos();
     }
 
     public String getDestinatario() {
         return destinatario;
     }
 
-    public String getAptitud1() {
-        return aptitud1;
+    public void setDestinatario(String destinatario) {
+        this.destinatario = destinatario;
     }
 
-    public String getAptitud2() {
-        return aptitud2;
+    public List<String> getVotos() {
+        return votos;
     }
 
-    public String getAptitud3() {
-        return aptitud3;
+    public void setVotos(List<String> votos) {
+        this.votos = votos;
     }
 }

@@ -1,8 +1,9 @@
 package TheBridge.TheBridgeNeo4jApiREST.repositories;
 
-import TheBridge.TheBridgeNeo4jApiREST.models.Comentario;
 import TheBridge.TheBridgeNeo4jApiREST.models.User;
-import TheBridge.TheBridgeNeo4jApiREST.objects.ComentarioDTO;
+import TheBridge.TheBridgeNeo4jApiREST.objects.CommentDTO;
+import TheBridge.TheBridgeNeo4jApiREST.objects.ValoracionDTO;
+import TheBridge.TheBridgeNeo4jApiREST.objects.VotosDTO;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
 
@@ -18,19 +19,35 @@ public interface UserRepository extends Neo4jRepository<User, UUID> {
 
     @Query("MATCH (destinatario:User {username: $emailDestinatario}) " +
             "MATCH (remitente:User {username: $emailRemitente}) " +
-            "CREATE (remitente)-[:COMENTO_A {mensaje: $mensaje, timestamp: $fecha}]->(destinatario)")
+            "CREATE (remitente)-[:COMENTO_A {mensaje: $mensaje, timestamp: $fecha, visible: true}]->(destinatario)")
     String comentarPerfilCompañero(String emailRemitente, String emailDestinatario, String mensaje, String fecha);
+
+    @Query("MATCH (r:User{username: $emailRemitente})-[c:COMENTO_A {timestamp: $fecha}]->(d:User{username: $emailDestinatario}) " +
+            "SET c.visible = false RETURN c")
+    void ocultarComentario(String emailRemitente, String emailDestinatario, String fecha);
+
+    @Query("MATCH (r:User{username: $emailRemitente})-[c:COMENTO_A {timestamp: $fecha}]->(d:User{username: $emailDestinatario}) " +
+            "SET c.visible = true RETURN c")
+    void mostrarComentario(String emailRemitente, String emailDestinatario, String fecha);
 
     @Query("MATCH (destinatario:User {username: $emailDestinatario}) " +
             "MATCH (remitente:User {username: $emailRemitente}) " +
             "MERGE (remitente)-[:VALORO_A {" +
-            "a1: $a1, a2: $a2, a3: $a3, mensaje: $mensaje, timestamp: $fecha" +
+            "votos: $votos, mensaje: $mensaje, timestamp: $fecha" +
             "}]->(destinatario)")
-    String valorarPerfilCompañero(String emailRemitente, String emailDestinatario, String a1, String a2, String a3, String mensaje, String fecha);
+    String valorarPerfilCompañero(String emailRemitente, String emailDestinatario, List<String> votos, String mensaje, String fecha);
 
     @Query("MATCH (n)-[c:COMENTO_A]->(u:User{username: $username}) RETURN c.mensaje as mensaje, n.username as remitente, u.username as destinatario, c.timestamp as timestamp")
-    List<ComentarioDTO> getComentariosByUser(String username);
+    List<CommentDTO> getCommentsByUser(String username);
 
-    @Query("MATCH (n)-[c:VALORO_A]->(u:User{username: $username})")
-    List<String> getTop3Aptitudes(String username);
+    @Query("MATCH (n)-[c:COMENTO_A]->(u:User{username: $username}) WHERE c.visible = true RETURN c.mensaje as mensaje, n.username as remitente, u.username as destinatario, c.timestamp as timestamp")
+    List<CommentDTO> getVisibleCommentsByUser(String username);
+
+    @Query("MATCH (n)-[v:VALORO_A]->(u:User{username: $username}) " +
+            "WITH apoc.text.join(v.votos, \",\") AS votos " +
+            "RETURN collect(votos)")
+    List<String> getSkillsByUsername(String username);
+
+    @Query("MATCH (u:User {username: $username}) SET u.introduction = $introduction RETURN u")
+    User modifyUserIntroduction(String username, String introduction);
 }

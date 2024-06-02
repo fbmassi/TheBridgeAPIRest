@@ -41,6 +41,20 @@ public class ProjectController {
         return new ResponseEntity<>(proyectos, HttpStatus.OK);
     }
 
+    @GetMapping("/deEquipo")
+    public ResponseEntity<List<Project>> proyectosDeEquipo(@RequestParam String teamIdentifier) {
+        List<Project> proyectos = proyectoService.getProjectsByTeam(teamIdentifier);
+
+        return new ResponseEntity<>(proyectos, HttpStatus.OK);
+    }
+
+    @GetMapping("/deCurso")
+    public ResponseEntity<List<Project>> proyectosDeCurso(@RequestParam String courseIdentifier) {
+        List<Project> proyectos = proyectoService.getProjectsByCourse(courseIdentifier);
+
+        return new ResponseEntity<>(proyectos, HttpStatus.OK);
+    }
+
     @GetMapping("/misProyectos")
     public ResponseEntity<List<Project>> misProyectos(Principal principal) {
         List<Project> proyectos = proyectoService.getProjectsByUser(principal.getName());

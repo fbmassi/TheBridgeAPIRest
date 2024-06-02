@@ -21,7 +21,7 @@ public class ProjectService {
     }
 
     public Project getProjectByIdentifier(String identifier) {
-        return projectRepository.findProyectByIdentifier(identifier)
+        return projectRepository.findProjectByIdentifier(identifier)
                 .orElseThrow(()-> new ResponseStatusException(HttpStatusCode.valueOf(404)));
     }
 
@@ -29,8 +29,20 @@ public class ProjectService {
         return projectRepository.findProjectsByUser(username);
     }
 
+    public List<Project> getProjectsByTeam(String teamIdentifier) {
+        return projectRepository.findProjectsByTeam(teamIdentifier);
+    }
+
+    public List<Project> getProjectsByCourse(String courseIdentifier) {
+        return projectRepository.findProjectsByCourse(courseIdentifier);
+    }
+
     public ProjectTeamCourseQueryResult getProjectWithTeamAndCourseByIdentifier(String identifier) {
-        return projectRepository.findProyectWithTeamAndCourseByIdentifier(identifier);
+        return projectRepository.findProjectWithTeamAndCourseByIdentifier(identifier);
+    }
+
+    public List<ProjectTeamCourseQueryResult> getProjectWithTeamAndCourseByUser(String username) {
+        return projectRepository.findProjectWithTeamAndCourseByUser(username);
     }
 
     public ProjectTeamCourseQueryResult createProject(Principal principal, CreateProyectRequest request) {
@@ -49,11 +61,11 @@ public class ProjectService {
         projectRepository.addCourseToProject(project.getIdentifier().toString(), request.getCursoIdentifier());
         projectRepository.addTeamToProject(project.getIdentifier().toString(), request.getEquipoIdentifier());
 
-        return projectRepository.findProyectWithTeamAndCourseByIdentifier(project.getIdentifier().toString());
+        return projectRepository.findProjectWithTeamAndCourseByIdentifier(project.getIdentifier().toString());
     }
 
     public void deleteProject(Principal principal, String identifier) {
-        Project project = projectRepository.findProyectByIdentifier(identifier)
+        Project project = projectRepository.findProjectByIdentifier(identifier)
                 .orElseThrow(()-> new ResponseStatusException(HttpStatusCode.valueOf(404)));
 
         if (!projectRepository.findProjectsByUser(principal.getName()).stream().map(Project::getIdentifier).toList().contains(UUID.fromString(identifier)))

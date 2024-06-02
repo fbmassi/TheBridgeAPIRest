@@ -1,16 +1,16 @@
 package TheBridge.TheBridgeNeo4jApiREST.objects;
 
-public class ComentarioDTO {
+public class CommentDTO {
     private String mensaje;
     private String remitente;
     private String destinatario;
     private String timestamp;
 
-    public ComentarioDTO(String mensaje, String remitente, String destinatario) {
+    public CommentDTO(String mensaje, String remitente, String destinatario, String timestamp) {
         this.mensaje = mensaje;
         this.remitente = remitente;
         this.destinatario = destinatario;
-        this.timestamp = java.time.LocalDateTime.now().toString();
+        this.timestamp = timestamp;
     }
 
     public String getMensaje() {
@@ -33,5 +33,8 @@ public class ComentarioDTO {
     }
     public String getRemitente() {
         return remitente;
+    }
+    public void setRemitente(String remitente) {
+        this.remitente = remitente;
     }
 }

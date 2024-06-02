@@ -1,8 +1,5 @@
 package TheBridge.TheBridgeNeo4jApiREST.objects;
 
-import TheBridge.TheBridgeNeo4jApiREST.models.Comentario;
-import TheBridge.TheBridgeNeo4jApiREST.models.Valoracion;
-
 import java.util.HashMap;
 import java.util.List;
 
@@ -11,56 +8,22 @@ public class UserProfileDTO {
     private String name;
     private String username;
     private String legajo;
-    private int liderazgo;
-    private int organizacion;
-    private int ideacion;
-    private int desarrollo;
-    private int comunicación;
+    private String introduction;
+    private HashMap<String, Float> skills;
+    private List<CommentDTO> comments;
+    private List<ProjectDTO> projects;
 
-    public UserProfileDTO(String name, String username, String legajo) {
+    public UserProfileDTO() {
+    }
+
+    public UserProfileDTO(String name, String username, String legajo, String introduction, HashMap<String, Float> skills, List<CommentDTO> comments, List<ProjectDTO> projects) {
         this.name = name;
         this.username = username;
         this.legajo = legajo;
-    }
-
-    public int getLiderazgo() {
-        return liderazgo;
-    }
-
-    public void setLiderazgo(int liderazgo) {
-        this.liderazgo = liderazgo;
-    }
-
-    public int getOrganizacion() {
-        return organizacion;
-    }
-
-    public void setOrganizacion(int organizacion) {
-        this.organizacion = organizacion;
-    }
-
-    public int getIdeacion() {
-        return ideacion;
-    }
-
-    public void setIdeacion(int ideacion) {
-        this.ideacion = ideacion;
-    }
-
-    public int getDesarrollo() {
-        return desarrollo;
-    }
-
-    public void setDesarrollo(int desarrollo) {
-        this.desarrollo = desarrollo;
-    }
-
-    public int getComunicación() {
-        return comunicación;
-    }
-
-    public void setComunicación(int comunicación) {
-        this.comunicación = comunicación;
+        this.introduction = introduction;
+        this.skills = skills;
+        this.comments = comments;
+        this.projects = projects;
     }
 
     public String getName() {
@@ -85,5 +48,37 @@ public class UserProfileDTO {
 
     public void setLegajo(String legajo) {
         this.legajo = legajo;
+    }
+
+    public String getIntroduction() {
+        return introduction;
+    }
+
+    public void setIntroduction(String introduction) {
+        this.introduction = introduction;
+    }
+
+    public HashMap<String, Float> getSkills() {
+        return skills;
+    }
+
+    public void setSkills(HashMap<String, Float> skills) {
+        this.skills = skills;
+    }
+
+    public List<CommentDTO> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<CommentDTO> comments) {
+        this.comments = comments;
+    }
+
+    public List<ProjectDTO> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(List<ProjectDTO> projects) {
+        this.projects = projects;
     }
 }
