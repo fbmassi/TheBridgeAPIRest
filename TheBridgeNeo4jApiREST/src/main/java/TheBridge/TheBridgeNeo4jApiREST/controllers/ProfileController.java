@@ -41,7 +41,7 @@ public class ProfileController {
         userProfileDTO.setLegajo(usuario.getLegajo());
         userProfileDTO.setIntroduction(usuario.getIntroduction());
 
-        // TODO ARREGLAR userProfileDTO.setSkills(interactionUserService.getSkillsByUsername(username));
+        userProfileDTO.setSkills(interactionUserService.getSkillsByUsername(username));
 
         userProfileDTO.setComments(interactionUserService.getComentariosVisiblesByUser(username));
 

@@ -32,9 +32,8 @@ public interface UserRepository extends Neo4jRepository<User, UUID> {
 
     @Query("MATCH (destinatario:User {username: $emailDestinatario}) " +
             "MATCH (remitente:User {username: $emailRemitente}) " +
-            "MERGE (remitente)-[:VALORO_A {" +
-            "votos: $votos, mensaje: $mensaje, timestamp: $fecha" +
-            "}]->(destinatario)")
+            "MERGE (remitente)-[r:VALORO_A]->(destinatario)" +
+            "SET r.votos = $votos, r.mensaje = $mensaje, r.timestamp = $fecha")
     String valorarPerfilCompañero(String emailRemitente, String emailDestinatario, List<String> votos, String mensaje, String fecha);
 
     @Query("MATCH (n)-[c:COMENTO_A]->(u:User{username: $username}) RETURN c.mensaje as mensaje, n.username as remitente, u.username as destinatario, c.timestamp as timestamp")
@@ -45,8 +44,8 @@ public interface UserRepository extends Neo4jRepository<User, UUID> {
 
     @Query("MATCH (n)-[v:VALORO_A]->(u:User{username: $username}) " +
             "WITH apoc.text.join(v.votos, \",\") AS votos " +
-            "RETURN collect(votos)")
-    List<String> getSkillsByUsername(String username);
+            "RETURN apoc.text.join(collect(votos), \",\")")
+    String getSkillsByUsername(String username);
 
     @Query("MATCH (u:User {username: $username}) SET u.introduction = $introduction RETURN u")
     User modifyUserIntroduction(String username, String introduction);

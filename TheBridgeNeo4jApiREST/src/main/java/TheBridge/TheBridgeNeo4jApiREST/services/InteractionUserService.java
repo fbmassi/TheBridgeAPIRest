@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -49,11 +50,23 @@ public class InteractionUserService {
     }
 
     public HashMap<String, Float> getSkillsByUsername(String username) {
-        userRepository.getSkillsByUsername(username);
+        List<String> skills = Arrays.stream(userRepository.getSkillsByUsername(username).split(",")).toList();
         HashMap<String, Float> skillsMap = new HashMap<>();
 
         int totalSkills = 0;
 
+        for (String skill : skills) {
+            if (skillsMap.containsKey(skill)) {
+                skillsMap.put(skill, skillsMap.get(skill) + 1);
+            } else {
+                skillsMap.put(skill, 1f);
+            }
+            totalSkills++;
+        }
+
+        for (String skill : skillsMap.keySet()) {
+            skillsMap.put(skill, skillsMap.get(skill) / totalSkills);
+        }
 
         return skillsMap;
     }

@@ -7,10 +7,12 @@ import java.util.List;
 public class ValoracionDTO {
     private String destinatario;
     private List<String> votos;
+    private String mensaje;
 
     public ValoracionDTO(Valoracion valoracion){
         this.destinatario = valoracion.getDestinatario().getUsername();
         this.votos = valoracion.getVotos();
+        this.mensaje = valoracion.getMensaje();
     }
 
     public String getDestinatario() {
@@ -27,5 +29,13 @@ public class ValoracionDTO {
 
     public void setVotos(List<String> votos) {
         this.votos = votos;
+    }
+
+    public String getMensaje() {
+        return mensaje;
+    }
+
+    public void setMensaje(String mensaje) {
+        this.mensaje = mensaje;
     }
 }
